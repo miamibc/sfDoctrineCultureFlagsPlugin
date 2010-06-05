@@ -1,0 +1,91 @@
+sfDoctrineCultureFlags plugin
+=============================
+
+This plugin adds automatically-generated links to multilingual pages of your website, decorated with small beautiful flag and nice title. These links are SE-friendly direct links, so, this means Google would thank you for such surprise, hope your visitors will rate them too.
+
+The real power of this plugin is that you don't need to mess with slugs in your template, or add code in each action. Just insert special mark in any place of your template or even layout, and add sfDoctrineCultureFlagsFilter to filters.yml. Please, read installation instruction until the end...
+
+Requirements and limitation
+---------------------------
+
+Plugin can auto-generate links for routes, where:
+
+*   Route is **sfDoctrineRoute**
+*   Object for this route is instance of **sfDoctrineRecord** with **I18n** behavoir.
+
+Installation
+------------
+
+  * Add pear channel
+
+        $ pear channel-discover plugins.symfony-project.org
+        $ pear channel-discover pear.symfony-project.com
+
+  * Install the plugin
+
+        $ symfony plugin:install sfDoctrineCultureFlagsPlugin
+
+  * Enable plugin in ProjectConfiguration.class.php
+
+        public function setup()
+        {
+          $this->enablePlugins('sfDoctrineCultureFlagsPlugin');
+        }
+
+  * Publish the assets
+
+        $ symfony plugin:publish-assets
+
+  * Add sfDoctrineCultureFlagsFilter to filters.yml
+
+        rendering: ~
+        security:  ~
+
+        # insert your own filters here
+        culture:
+          class: sfDoctrineCultureFlagsFilter
+          param:
+            ru: По-русски
+            et: Eesti keeles
+            en: In English
+
+        cache:     ~
+        execution: ~
+
+  * Clear the cache
+
+        $ symfony cc
+
+  * Add html comment to template or layout, in place where links must be placed.
+
+        <!-- CultureFlags -->
+
+Customizing
+-----------
+
+Add necessary languages to **filters.yml** under **params** section.
+This must be hash of cultures and in-language titles. Example:
+
+    param:
+      ru: По-русски
+      et: Eesti keeles
+      en: In English
+
+If there is no flag for culture you've used, add it to
+**web/sfDoctrineCultureFlagsPlugin/images/flags** folder
+and give filenaname **culture**.png, for example **en.png**
+
+How it works
+------------
+
+* Fitler gets current Route name.
+* From Request it gets Object attached.
+* Checks condition of current Route and Object for requirements.
+* By swithing cultures it builds links to our Object in another languages.
+* Replaces mark in final rendered page with generated links.
+
+Todo/plans
+----------
+----------
+
+Do the same with standart sfPatternRoute. Is it real? Maybe no, but I'll try.
