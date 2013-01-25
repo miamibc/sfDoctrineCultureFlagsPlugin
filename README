@@ -84,6 +84,37 @@ How it works
 * By swithing cultures it builds links to our Object in another languages.
 * Replaces mark in final rendered page with generated links.
 
+Note on complex routes
+----------------------
+
+If in your route URL you use an internationalised parameter which is retrieved 
+from a related object, some changes have to be made in the code. As the situation
+is relatively rare and its' hard to make a generic implementation, I leave
+it to the user to take care of it.
+
+Let's consider this example:
+We have a Product model which belongs to a Category, which, in turn, is a child 
+of a Main Category. The Slug for Product name, Category name and MainCategory 
+name are all language-dependent. In routing we use:
+
+    product_show:
+      url: /:sf_culture/product/show/:mainCategorySlug/:categorySlug/:slug
+      ...
+
+To make it work, you have to add code to the sfDoctrineCultureFlagsFilter class 
+which will clear the Translation relations for every model for which you are 
+using the Translation.
+
+Near line with `$obj->clearRelated()` you would have to add something like:
+
+    if ($obj instanceof Product) {
+        $obj->Category->MainCategory->clearRelated();
+        $obj->Category->clearRelated();
+    }
+
+You could make some investigation as to why it happens this way but I think it's
+not that important - just keep in mind it won't work if you don't do this.
+
 Todo/plans
 ----------
 ----------
