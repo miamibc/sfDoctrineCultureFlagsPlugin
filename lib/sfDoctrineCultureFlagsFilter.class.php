@@ -30,6 +30,16 @@ class sfDoctrineCultureFlagsFilter extends sfFilter {
     // i don't know why, but without clearRelated
     // link_to returns the same slug for object
 
+    /**
+     * If you use localised parameters from related objects you need to
+     * manually clear the relations of those relations (sounds crazy!)
+     * @see README section "Note on complex routes" for more details.
+     * e.g.
+     *     if ($obj instanceof Product) {
+     *         $obj->Category->clearRelated();
+     *     }
+     */
+    
     /* @var $route sfDoctrineRoute */
     /* @var $obj sfDoctrineRecord */
 
